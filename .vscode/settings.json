@@ -1,0 +1,16 @@
+{
+    "python.testing.unittestArgs": [
+        "-v",
+        "-s",
+        "./app",
+        "-p",
+        "*test.py"
+    ],
+    "python.testing.unittestEnabled": true,
+    "python.testing.pytestEnabled": false,
+    "python.languageServer": "Default",
+    "python.autoComplete.extraPaths": [
+        "c:/users/pc/onedrive/desktop/hybris/hybris-backend/.venv/lib/site-packages",
+        "./app"
+    ]
+}
