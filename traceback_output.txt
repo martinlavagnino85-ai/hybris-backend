@@ -1,0 +1,62 @@
+Traceback (most recent call last):
+  File "C:\Users\PC\OneDrive\Desktop\Hybris\hybris-backend\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\PC\OneDrive\Desktop\Hybris\hybris-backend\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 924, in do_execute
+    cursor.execute(statement, parameters)
+  File "C:\Users\PC\OneDrive\Desktop\Hybris\hybris-backend\.venv\Lib\site-packages\psycopg\cursor.py", line 117, in execute
+    raise ex.with_traceback(None)
+psycopg.errors.ForeignKeyViolation: inserción o actualización en la tabla «bookings» viola la llave foránea «bookings_offer_id_fkey»
+DETAIL:  La llave (offer_id)=(fe39b9c2-3b9e-4779-bcb8-184064dd41f4) no está presente en la tabla «offers».
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\PC\OneDrive\Desktop\Hybris\hybris-backend\test_availability.py", line 117, in test_availability
+    create_booking(db, prop1.id, host.id, guest.id, date(2026, 4, 5), date(2026, 4, 15))
+  File "C:\Users\PC\OneDrive\Desktop\Hybris\hybris-backend\test_availability.py", line 100, in create_booking
+    db.flush()
+  File "C:\Users\PC\OneDrive\Desktop\Hybris\hybris-backend\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 4341, in flush
+    self._flush(objects)
+  File "C:\Users\PC\OneDrive\Desktop\Hybris\hybris-backend\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 4476, in _flush
+    with util.safe_reraise():
+         ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\PC\OneDrive\Desktop\Hybris\hybris-backend\.venv\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 146, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\Users\PC\OneDrive\Desktop\Hybris\hybris-backend\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 4437, in _flush
+    flush_context.execute()
+  File "C:\Users\PC\OneDrive\Desktop\Hybris\hybris-backend\.venv\Lib\site-packages\sqlalchemy\orm\unitofwork.py", line 466, in execute
+    rec.execute(self)
+  File "C:\Users\PC\OneDrive\Desktop\Hybris\hybris-backend\.venv\Lib\site-packages\sqlalchemy\orm\unitofwork.py", line 642, in execute
+    util.preloaded.orm_persistence.save_obj(
+  File "C:\Users\PC\OneDrive\Desktop\Hybris\hybris-backend\.venv\Lib\site-packages\sqlalchemy\orm\persistence.py", line 93, in save_obj
+    _emit_insert_statements(
+  File "C:\Users\PC\OneDrive\Desktop\Hybris\hybris-backend\.venv\Lib\site-packages\sqlalchemy\orm\persistence.py", line 1233, in _emit_insert_statements
+    result = connection.execute(
+             ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\PC\OneDrive\Desktop\Hybris\hybris-backend\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1418, in execute
+    return meth(
+           ^^^^^
+  File "C:\Users\PC\OneDrive\Desktop\Hybris\hybris-backend\.venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 515, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\PC\OneDrive\Desktop\Hybris\hybris-backend\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1640, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\PC\OneDrive\Desktop\Hybris\hybris-backend\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1846, in _execute_context
+    return self._exec_single_context(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\PC\OneDrive\Desktop\Hybris\hybris-backend\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1986, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "C:\Users\PC\OneDrive\Desktop\Hybris\hybris-backend\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 2353, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "C:\Users\PC\OneDrive\Desktop\Hybris\hybris-backend\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\PC\OneDrive\Desktop\Hybris\hybris-backend\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 924, in do_execute
+    cursor.execute(statement, parameters)
+  File "C:\Users\PC\OneDrive\Desktop\Hybris\hybris-backend\.venv\Lib\site-packages\psycopg\cursor.py", line 117, in execute
+    raise ex.with_traceback(None)
+sqlalchemy.exc.IntegrityError: (psycopg.errors.ForeignKeyViolation) inserción o actualización en la tabla «bookings» viola la llave foránea «bookings_offer_id_fkey»
+DETAIL:  La llave (offer_id)=(fe39b9c2-3b9e-4779-bcb8-184064dd41f4) no está presente en la tabla «offers».
+[SQL: INSERT INTO bookings (offer_id, property_id, guest_id, host_id, checkin_date, checkout_date, nights, price_per_night, total_amount) VALUES (%(offer_id)s::UUID, %(property_id)s::UUID, %(guest_id)s::UUID, %(host_id)s::UUID, %(checkin_date)s::DATE, %(checkout_date)s::DATE, %(nights)s::INTEGER, %(price_per_night)s::INTEGER, %(total_amount)s::INTEGER) RETURNING bookings.id, bookings.created_at]
+[parameters: {'offer_id': UUID('fe39b9c2-3b9e-4779-bcb8-184064dd41f4'), 'property_id': UUID('4e5a65a2-e640-4044-8109-21e51c3cb489'), 'guest_id': UUID('3a77a068-c590-4616-ac98-8e3b778620e4'), 'host_id': UUID('fe39b9c2-3b9e-4779-bcb8-184064dd41f4'), 'checkin_date': datetime.date(2026, 4, 5), 'checkout_date': datetime.date(2026, 4, 15), 'nights': 10, 'price_per_night': 25000, 'total_amount': 250000}]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)

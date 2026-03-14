@@ -25,3 +25,6 @@ class User(Base):
 
     # Relationships are handled dynamically or by strings to avoid circular imports.
     properties = relationship("Property", back_populates="host")
+    offers_made = relationship("Offer", back_populates="guest")
+    bookings_as_guest = relationship("Booking", foreign_keys="[Booking.guest_id]", back_populates="guest")
+    bookings_as_host = relationship("Booking", foreign_keys="[Booking.host_id]", back_populates="host")
