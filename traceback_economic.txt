@@ -1,0 +1,63 @@
+Traceback (most recent call last):
+  File "C:\Users\PC\OneDrive\Desktop\Hybris\hybris-backend\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 2116, in _exec_insertmany_context
+    dialect.do_execute(
+  File "C:\Users\PC\OneDrive\Desktop\Hybris\hybris-backend\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 924, in do_execute
+    cursor.execute(statement, parameters)
+  File "C:\Users\PC\OneDrive\Desktop\Hybris\hybris-backend\.venv\Lib\site-packages\psycopg\cursor.py", line 117, in execute
+    raise ex.with_traceback(None)
+psycopg.errors.CheckViolation: el nuevo registro para la relación «property_offer_filters» viola la restricción «check» «property_offer_filters_price_per_night_check»
+DETAIL:  La fila que falla contiene (2eb5b791-0396-4784-8650-240369112192, 83659359-631d-49dd-8c79-f967559db285, 3, 800, 2026-03-14 18:04:08.723133-03).
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\PC\OneDrive\Desktop\Hybris\hybris-backend\test_economic.py", line 87, in test_economic_logic
+    prop = setup_test_data(db)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\PC\OneDrive\Desktop\Hybris\hybris-backend\test_economic.py", line 77, in setup_test_data
+    db.flush()
+  File "C:\Users\PC\OneDrive\Desktop\Hybris\hybris-backend\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 4341, in flush
+    self._flush(objects)
+  File "C:\Users\PC\OneDrive\Desktop\Hybris\hybris-backend\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 4476, in _flush
+    with util.safe_reraise():
+         ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\PC\OneDrive\Desktop\Hybris\hybris-backend\.venv\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 146, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\Users\PC\OneDrive\Desktop\Hybris\hybris-backend\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 4437, in _flush
+    flush_context.execute()
+  File "C:\Users\PC\OneDrive\Desktop\Hybris\hybris-backend\.venv\Lib\site-packages\sqlalchemy\orm\unitofwork.py", line 466, in execute
+    rec.execute(self)
+  File "C:\Users\PC\OneDrive\Desktop\Hybris\hybris-backend\.venv\Lib\site-packages\sqlalchemy\orm\unitofwork.py", line 642, in execute
+    util.preloaded.orm_persistence.save_obj(
+  File "C:\Users\PC\OneDrive\Desktop\Hybris\hybris-backend\.venv\Lib\site-packages\sqlalchemy\orm\persistence.py", line 93, in save_obj
+    _emit_insert_statements(
+  File "C:\Users\PC\OneDrive\Desktop\Hybris\hybris-backend\.venv\Lib\site-packages\sqlalchemy\orm\persistence.py", line 1143, in _emit_insert_statements
+    result = connection.execute(
+             ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\PC\OneDrive\Desktop\Hybris\hybris-backend\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1418, in execute
+    return meth(
+           ^^^^^
+  File "C:\Users\PC\OneDrive\Desktop\Hybris\hybris-backend\.venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 515, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\PC\OneDrive\Desktop\Hybris\hybris-backend\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1640, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\PC\OneDrive\Desktop\Hybris\hybris-backend\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1844, in _execute_context
+    return self._exec_insertmany_context(dialect, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\PC\OneDrive\Desktop\Hybris\hybris-backend\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 2124, in _exec_insertmany_context
+    self._handle_dbapi_exception(
+  File "C:\Users\PC\OneDrive\Desktop\Hybris\hybris-backend\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 2353, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "C:\Users\PC\OneDrive\Desktop\Hybris\hybris-backend\.venv\Lib\site-packages\sqlalchemy\engine\base.py", line 2116, in _exec_insertmany_context
+    dialect.do_execute(
+  File "C:\Users\PC\OneDrive\Desktop\Hybris\hybris-backend\.venv\Lib\site-packages\sqlalchemy\engine\default.py", line 924, in do_execute
+    cursor.execute(statement, parameters)
+  File "C:\Users\PC\OneDrive\Desktop\Hybris\hybris-backend\.venv\Lib\site-packages\psycopg\cursor.py", line 117, in execute
+    raise ex.with_traceback(None)
+sqlalchemy.exc.IntegrityError: (psycopg.errors.CheckViolation) el nuevo registro para la relación «property_offer_filters» viola la restricción «check» «property_offer_filters_price_per_night_check»
+DETAIL:  La fila que falla contiene (2eb5b791-0396-4784-8650-240369112192, 83659359-631d-49dd-8c79-f967559db285, 3, 800, 2026-03-14 18:04:08.723133-03).
+[SQL: INSERT INTO property_offer_filters (property_id, min_nights, price_per_night) VALUES (%(property_id)s::UUID, %(min_nights)s::INTEGER, %(price_per_night)s::INTEGER) RETURNING property_offer_filters.id, property_offer_filters.created_at]
+[parameters: {'property_id': UUID('83659359-631d-49dd-8c79-f967559db285'), 'min_nights': 3, 'price_per_night': 800}]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
