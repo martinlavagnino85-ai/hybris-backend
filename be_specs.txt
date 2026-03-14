@@ -1,0 +1,175 @@
+Hybris Backend Blueprint – Stage 1: Guest POV – Offer Creation 
+ 
+1. Architecture 
+Define the backend architecture using a clear modular structure. 
+Core principles: 
+- Separation between routers, services, models, and schemas 
+- Business logic must live in services, not routers 
+- Routers only orchestrate request → service → response 
+- Database access handled through SQLAlchemy session dependency 
+ 
+2. Infrastructure Configuration 
+Define infrastructure configuration required for backend operation. 
+Includes: 
+- FastAPI application initialization 
+- Database connection configuration 
+- SQLAlchemy engine and session management 
+- Environment variables loading (.env) 
+- Dependency injection for database sessions 
+ 
+3. ORM Models 
+Define SQLAlchemy ORM models corresponding to the database entities. 
+Models must reflect the database schema and include: 
+- entity definitions 
+- relationships between entities 
+- constraints and validations defined at ORM level when appropriate 
+ 
+Note: 
+The full database schema is defined in a separate paper dedicated exclusively to the 
+database structure. 
+ 
+4. API Schemas 
+Define Pydantic schemas for API communication. 
+Schemas must include: 
+- request schemas for endpoints 
+- response schemas 
+- data validation rules 
+- clear typing for all fields 
+These schemas represent the contract between frontend and backend. 
+ 
+5. Availability Rules 
+Define logic responsible for determining property availability. 
+Rules include: 
+- detection of overlapping bookings 
+- respect of inventory_count for multi-unit properties 
+Overlap rule: 
+requested_checkin < booking_checkout 
+AND 
+requested_checkout > booking_checkin 
+ 
+A property is considered available if: 
+overlapping_bookings < inventory_count 
+ 
+6. Economic Rules 
+Define economic rules governing the marketplace logic. 
+Includes: 
+ 
+Calculation of nights: 
+nights = checkout_date - checkin_date 
+ 
+Calculation of effective_threshold: 
+ 
+Each property defines pricing filters: 
+min_nights / price_per_night 
+ 
+The effective threshold is: 
+MIN(price_per_night) 
+for filters where 
+min_nights <= requested_nights 
+ 
+7. Search Engine 
+Define the search engine responsible for generating the eligible market. 
+The search engine must: 
+ 
+1. receive a search request 
+2. calculate nights 
+3. filter properties structurally: 
+   - city 
+   - guest capacity 
+   - property type 
+   - requirements (pets, children, pool) 
+4. verify availability 
+5. verify existence of valid pricing filters 
+6. compute effective_threshold 
+7. produce the eligible property market 
+ 
+8. Price Exploration Logic 
+Define the logic behind the price exploration interface. 
+The backend must compute: 
+- minimum rate 
+- maximum rate 
+- step value 
+- initial rate 
+ 
+Two modes must be supported: 
+- nightly_rate 
+- total_budget 
+ 
+Conversion rule: 
+total_budget = nightly_rate × nights 
+nightly_rate = total_budget / nights 
+ 
+9. Visible Property Selection 
+Define the algorithm selecting which properties are shown in the initial UI sample. 
+ 
+The backend must: 
+- order properties by effective_threshold 
+- select a limited sample (3–4 properties) 
+- ensure the sample represents competitive market options 
+ 
+10. Offer Candidate Generation 
+Define the logic that determines which properties receive an offer. 
+A property becomes a candidate if: 
+effective_threshold <= offered_price_per_night 
+For every qualifying property an offer_candidate record must be created. 
+ 
+11. Offer Creation 
+Define the logic for creating a guest offer. 
+The system must: 
+1. validate search parameters 
+2. validate offered price coherence 
+3. compute expires_at based on duration_hours 
+4. persist the offer 
+5. generate offer_candidates 
+ 
+12. Endpoint Contracts 
+The following endpoints define the core interaction flow. 
+ 
+POST /search 
+- executes property search 
+- returns dataset for price exploration 
+ 
+POST /offers 
+- creates an offer 
+- generates offer candidates 
+ 
+GET /offers/{offer_id} 
+- returns the state of an offer 
+ 
+GET /host/offers 
+- returns offers received by host properties 
+ 
+POST /host/offers/{offer_candidate_id}/accept 
+- host accepts an offer 
+ 
+POST /host/offers/{offer_candidate_id}/reject 
+- host rejects an offer 
+ 
+POST /bookings 
+- converts an accepted offer into a booking 
+ 
+13. Error Handling 
+All endpoints must include consistent error handling. 
+Requirements: 
+- input validation 
+- descriptive HTTP errors 
+- consistent error messages 
+Examples: 
+400 – invalid request parameters 
+403 – unauthorized action 
+404 – resource not found 
+ 
+14. Data Consistency 
+Ensure integrity of marketplace data. 
+Includes: 
+- database transactions for offer creation 
+- validation before booking creation 
+- referential integrity checks 
+ 
+15. Logging 
+Provide minimal logging for operational traceability. 
+ 
+Log events include: 
+- search execution 
+- offer creation 
+- host responses 

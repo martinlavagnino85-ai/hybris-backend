@@ -1,0 +1,192 @@
+Hybris Database Specification – Stage 1: Guest POV – Offer Creation 
+ 
+This document defines the complete database schema used by the Hybris platform for 
+Stage 1 of development: Guest POV – Creation of Offer. 
+ 
+This specification includes: 
+ 
+• all database tables 
+• all columns and data types 
+• primary keys 
+• foreign keys 
+• business constraints 
+• semantic meaning of fields 
+ 
+The database uses PostgreSQL. 
+Primary keys use UUID values generated with gen_random_uuid(). 
+ 
+users 
+Columns 
+ 
+id (UUID, PK) 
+name (TEXT, NOT NULL) 
+email (TEXT, UNIQUE, NOT NULL) 
+password_hash (TEXT, NOT NULL) 
+role (ENUM: guest | host) 
+created_at (TIMESTAMP WITH TIME ZONE) 
+ 
+Description 
+ 
+Represents all users in the system. 
+Users can act either as guests or hosts depending on their role. 
+cities 
+Columns 
+ 
+id (UUID, PK) 
+name (TEXT, NOT NULL) 
+province (TEXT, NOT NULL) 
+property_count (INTEGER, NOT NULL) 
+is_active (BOOLEAN, NOT NULL) 
+created_at (TIMESTAMP WITH TIME ZONE) 
+ 
+Description 
+ 
+Represents cities available for property listing and guest search. 
+ 
+property_count represents the total number of active units listed in that city. 
+The value must be maintained by backend logic and equals the sum of 
+inventory_count of all active properties in that city. 
+properties 
+Columns 
+ 
+id (UUID, PK) 
+host_id (UUID, FK → users.id) 
+city_id (UUID, FK → cities.id) 
+ 
+title (TEXT) 
+description (TEXT) 
+location (TEXT) 
+ 
+property_type (ENUM: apartment | house | cabin) 
+ 
+max_guests (INTEGER) 
+room_count (INTEGER) 
+ 
+inventory_count (INTEGER) 
+ 
+pets_allowed (BOOLEAN) 
+children_allowed (BOOLEAN) 
+pool_available (BOOLEAN) 
+ 
+price_reference (INTEGER) 
+ 
+base_min_nights (INTEGER) 
+ 
+is_active (BOOLEAN) 
+ 
+created_at (TIMESTAMP WITH TIME ZONE) 
+ 
+Description 
+ 
+Represents properties listed by hosts. 
+ 
+inventory_count allows multiple identical units to be listed under the same property 
+(for example hotel rooms or identical apartments). 
+property_offer_filters 
+Columns 
+ 
+id (UUID, PK) 
+property_id (UUID, FK → properties.id) 
+ 
+min_nights (INTEGER) 
+price_per_night (INTEGER) 
+ 
+created_at (TIMESTAMP WITH TIME ZONE) 
+ 
+Description 
+ 
+Defines the pricing filters for each property. 
+ 
+Each filter expresses: 
+ 
+min_nights / price_per_night 
+ 
+The effective threshold for a search is the minimum price_per_night among filters 
+where min_nights <= requested_nights. 
+ 
+Constraints 
+ 
+Each property must not have duplicate min_nights or duplicate price_per_night values. 
+offers 
+Columns 
+ 
+id (UUID, PK) 
+guest_id (UUID, FK → users.id) 
+city_id (UUID, FK → cities.id) 
+ 
+checkin_date (DATE) 
+checkout_date (DATE) 
+nights (INTEGER) 
+ 
+guest_count (INTEGER) 
+ 
+include_apartment (BOOLEAN) 
+include_house (BOOLEAN) 
+include_cabin (BOOLEAN) 
+ 
+require_pets_allowed (BOOLEAN) 
+require_children_allowed (BOOLEAN) 
+require_pool (BOOLEAN) 
+ 
+pricing_mode (ENUM: nightly_rate | total_budget) 
+ 
+offered_price_per_night (INTEGER) 
+offered_total_amount (INTEGER) 
+ 
+duration_hours (INTEGER) 
+expires_at (TIMESTAMP WITH TIME ZONE) 
+ 
+status (ENUM: active | expired | cancelled | completed) 
+ 
+created_at (TIMESTAMP WITH TIME ZONE) 
+ 
+Description 
+ 
+Represents a guest offer submitted to the marketplace. 
+The offer is broadcast to all properties whose effective threshold 
+is less than or equal to the offered price. 
+offer_candidates 
+Columns 
+ 
+id (UUID, PK) 
+ 
+offer_id (UUID, FK → offers.id) 
+property_id (UUID, FK → properties.id) 
+ 
+effective_threshold (INTEGER) 
+ 
+host_response (ENUM: pending | accepted | rejected) 
+ 
+responded_at (TIMESTAMP WITH TIME ZONE) 
+ 
+created_at (TIMESTAMP WITH TIME ZONE) 
+ 
+Description 
+ 
+Represents the relationship between an offer and each property that received it. 
+ 
+A record exists for every property candidate eligible to accept the offer. 
+bookings 
+Columns 
+ 
+id (UUID, PK) 
+ 
+offer_id (UUID, FK → offers.id) 
+property_id (UUID, FK → properties.id) 
+ 
+guest_id (UUID, FK → users.id) 
+host_id (UUID, FK → users.id) 
+ 
+checkin_date (DATE) 
+checkout_date (DATE) 
+nights (INTEGER) 
+ 
+price_per_night (INTEGER) 
+total_amount (INTEGER) 
+ 
+created_at (TIMESTAMP WITH TIME ZONE) 
+ 
+Description 
+ 
+Represents a finalized booking created when a guest selects one of the 
+accepted offer candidates. 

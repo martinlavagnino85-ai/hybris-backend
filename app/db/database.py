@@ -13,14 +13,18 @@ To establish a single, robust connection point between the FastAPI application a
 """
 
 import os
+from dotenv import load_dotenv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base
+
+# Load environment variables from .env file
+load_dotenv()
 
 # The application uses python-dotenv to load environment variables from the .env file.
 # The URL must point to a PostgreSQL database.
 DATABASE_URL = os.getenv(
     "DATABASE_URL", 
-    "postgresql://postgres:postgres@localhost:5432/hybris"
+    "postgresql+psycopg://postgres:postgres@localhost:5432/hybris"
 )
 
 # Create the SQLAlchemy engine which is the starting point for any SQLAlchemy application.
